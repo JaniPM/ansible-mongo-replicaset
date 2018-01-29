@@ -1,22 +1,11 @@
-var config = {
-  _id: "{{replicaSetName}}",
-  version: 1,
-  members: [
-    {% for host in groups['mongodb'] %}
-    { 
-      _id: {{loop.index}}, 
-      host: "{{host}}",
-      priority: {{hostvars[host]['priority']}},
-      arbiterOnly: {{hostvars[host]['arbiterOnly']}}
-    }
-    {% if not loop.last %}
-    ","
-    {% endif %}
-    {% endfor %}
-  ]
-}
+rs.initiate()
 
-rs.initiate(config)
-sleep(13000)
+{% for host in groups['mongodb'] %}
+rs.add({ 
+  host: "{{host}}", 
+  priority: {{hostvars[host]['priority']}},
+  arbiterOnly: {{hostvars[host]['arbiterOnly']}}
+})
+{% endfor %}
 
 printjson(rs.status())

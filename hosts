@@ -1,8 +1,8 @@
-[local]
-localhost ansible_connection=local
+# [local]
+# localhost ansible_connection=local
 
 [mongodb]
-52.203.124.70 arbiterOnly=false priority=2
+52.203.43.48 arbiterOnly=false priority=2
 
 [mongodb:vars]
 # Ubuntu 16 uses python3 instead of 2 by default
