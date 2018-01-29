@@ -1,0 +1,3 @@
+# Ansible ignore files
+*.retry
+ansible.cfg

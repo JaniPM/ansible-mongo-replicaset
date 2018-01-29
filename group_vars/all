@@ -1,0 +1,5 @@
+# The global variable file
+
+replicaSetName: rs1
+mongodb_db_path: /data/db
+mongodb_log_path: /data/log
