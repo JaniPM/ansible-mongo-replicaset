@@ -1,0 +1,74 @@
+
+# Amazon Linux needs xfsprogs installed in order to mount xfs filesystem for Mongo
+- name: Install xfsprogs
+  yum: 
+    name: xfsprogs
+
+- name: Create XFS filesystem for database files
+  filesystem: 
+    dev=/dev/xvdf
+    fstype=xfs
+
+- name: Mount XFS for database files
+  mount:
+    path: /data
+    src: /dev/xvdf
+    fstype: xfs
+    opts: "defaults,noatime"
+    passno: 2
+    state: mounted
+
+- name: Configure package management system (yum for MongoDB 3.6)
+  yum_repository:
+    name: mongodb-org-3.6
+    description: MongoDB Repository
+    baseurl: https://repo.mongodb.org/yum/amazon/2013.03/mongodb-org/3.6/x86_64/
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: https://www.mongodb.org/static/pgp/server-3.6.asc
+
+- name: Install MongoDB packages
+  yum: 
+    name: > 
+      python-pip,
+      mongodb-org-3.6.2,
+      mongodb-org-server-3.6.2,
+      mongodb-org-shell-3.6.2,
+      mongodb-org-mongos-3.6.2,
+      mongodb-org-tools-3.6.2
+
+- name: RedHat - install yum-version-lock
+  yum: 
+    name: yum-plugin-versionlock 
+    state: present 
+    update_cache: yes
+
+- name: RedHat - lock MongoDB version
+  command: yum versionlock add mongodb-org-*
+
+- name: Update mongod.conf
+  template: 
+    src: mongod.initial.conf.j2
+    dest: /etc/mongod.conf
+
+- name: Create db directory for MongoDB
+  file: 
+    path={{ mongodb_db_path }}
+    owner=mongod 
+    group=mongod 
+    state=directory
+
+- name: Create log directory for MongoDB
+  file: 
+    path={{ mongodb_log_path }}
+    owner=mongod 
+    group=mongod 
+    state=directory
+
+- name: Start mongod as a service
+  service:
+    name: mongod
+    state: started
+
+- name: Ensure mongod restart on system boot
+  command: chkconfig mongod on

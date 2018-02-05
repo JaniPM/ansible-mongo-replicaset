@@ -1,0 +1,26 @@
+# Pymongo is prerequisite for mongodb_user module
+- name: Install the latest pymongo package
+  pip: name=pymongo state=latest use_mirrors=no
+
+# Add users to database in a replica set, 
+# the primary server is automatically discovered and written to
+
+- name: Create superuser for database
+  mongodb_user:
+    database: admin
+    replica_set: "{{replicaSetName}}"
+    name: superUserAdmin
+    password: Password! 
+    roles: root
+    state: present
+
+- name: Create app user for database
+  mongodb_user:
+    database: admin
+    replica_set: "{{replicaSetName}}"
+    name: appUser
+    password: Password! 
+    roles: 
+      - db: appDb
+        role: readWrite
+    state: present

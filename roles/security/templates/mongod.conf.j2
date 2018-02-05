@@ -1,0 +1,49 @@
+# mongod.conf
+
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
+
+# Where and how to store data.
+storage:
+  dbPath: "{{mongodb_db_path}}"
+  journal:
+    enabled: true
+#  engine:
+#  mmapv1:
+#  wiredTiger:
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: "{{mongodb_log_path}}/mongod.log"
+
+# network interfaces
+# We bind to all addresses and handle security with firewals and authentication
+net:
+  port: 27017
+  #bindId: 127.0.01
+  bindIpAll: true
+
+# how the process runs
+processManagement:
+  fork: true  # fork and run in background
+  pidFilePath: /var/run/mongodb/mongod.pid  # location of pidfile
+  timeZoneInfo: /usr/share/zoneinfo
+
+security:
+  authorization: enabled
+  keyFile: {{mongodb_db_path}}/secret
+
+#operationProfiling:
+
+replication:
+  replSetName: {{replicaSetName}}
+
+#sharding:
+
+## Enterprise-Only Options:
+
+#auditLog:
+
+#snmp:

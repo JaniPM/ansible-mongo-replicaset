@@ -1,0 +1,7 @@
+- name: Create file to initiate replica set
+  template: 
+    src: replSetInit.j2
+    dest: ./replSetInit.js
+
+- name: Initialize the replica set
+  command: mongo ./replSetInit.js
