@@ -1,4 +1,3 @@
-# ansible-mongo-replicaset
 Example to configure MongoDB replica set using Ansible
 
 # Getting started
@@ -9,6 +8,7 @@ ssh key file. E.g. \
 `[defaults]`\
 `inventory = ./hosts` \
 `private_key_file=<path-to-pem-file>`
+- Run `ansible-playbook site.yml`
 
 # Notes about security
 Current implementation enables authentication and uses keyfiles for internal
